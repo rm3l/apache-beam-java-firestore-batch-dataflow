@@ -1,1 +1,1 @@
-# apache-beam-quickstart-gradle-kotlin-template
+# apache-beam-quickstart-java-firestore-batch
