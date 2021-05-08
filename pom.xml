@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.rm3l</groupId>
-  <artifactId>apache-beam-quickstart-gradle-kotlin</artifactId>
+  <artifactId>apache-beam-quickstart-java-firestore-batch</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 
   <packaging>jar</packaging>
