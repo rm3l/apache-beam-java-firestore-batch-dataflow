@@ -54,7 +54,9 @@ public class WordCountToFirestorePipeline {
   }
 
   public enum Implementation {
-    naive(NaiveImplementation.class);
+    naive(NaiveImplementation.class),
+
+    batch(BatchWriteImplementation.class);
 
     public final Class<? extends AbstractImplementation> implementationType;
 
@@ -160,5 +162,56 @@ public class WordCountToFirestorePipeline {
     }
   }
 
+  static class BatchWriteImplementation extends AbstractImplementation implements
+      java.io.Serializable {
+
+    @Override
+    protected Pipeline doCreatePipeline(final String[] args) {
+      final BatchWriteImplementationOptions options =
+          PipelineOptionsFactory.fromArgs(args).withValidation()
+              .as(BatchWriteImplementationOptions.class);
+      final Pipeline wordCountToFirestorePipeline = Pipeline.create(options);
+
+      final String outputGoogleCloudProject = options.getOutputGoogleCloudProject();
+      final String inputFile = options.getInputFile();
+      final String outputFirestoreCollectionPath = options
+          .getOutputFirestoreCollectionPath() != null ?
+          options.getOutputFirestoreCollectionPath() :
+          inputFile.substring(inputFile.lastIndexOf("/") + 1, inputFile.length());
+
+      wordCountToFirestorePipeline.apply("ReadLines", TextIO.read().from(inputFile))
+          .apply(new CountWords())
+          .apply("Write Counts to Firestore",
+              new PTransform<PCollection<KV<String, Long>>, PDone>() {
+                @Override
+                public PDone expand(PCollection<KV<String, Long>> input) {
+                  input.apply("Batch write to Firestore", ParDo.of(new FirestoreUpdateDoFn<>(
+                      outputGoogleCloudProject, options.getFirestoreMaxBatchSize(),
+                      (final Firestore firestoreDb, final KV<String, Long> element) -> {
+                        final Map<String, Long> documentData = new HashMap<>();
+                        documentData.put("count", element.getValue());
+
+                        firestoreDb.collection(outputFirestoreCollectionPath)
+                            .document(element.getKey())
+                            .set(documentData);
+                      }
+                  )));
+                  return PDone.in(input.getPipeline());
+                }
+
+              });
+
+      return wordCountToFirestorePipeline;
+    }
+
+    public interface BatchWriteImplementationOptions extends Options {
+
+      @Description("Max batch size for Firestore writes")
+      @Default.Integer(FirestoreUpdateDoFn.DEFAULT_MAX_BATCH_SIZE)
+      int getFirestoreMaxBatchSize();
+
+      void setFirestoreMaxBatchSize(int firestoreMaxBatchSize);
+    }
+  }
 
 }
