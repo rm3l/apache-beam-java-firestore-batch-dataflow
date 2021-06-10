@@ -1,4 +1,4 @@
-package org.apache.beam.examples.firestore;
+package org.rm3l.beam.firestore;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.apache.beam.examples.WordCount.CountWords;
+import org.rm3l.beam.WordCount.CountWords;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.Default;

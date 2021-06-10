@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.beam.examples;
+package org.rm3l.beam;
 
 import java.util.Arrays;
 import java.util.List;
-import org.apache.beam.examples.WordCount.CountWords;
-import org.apache.beam.examples.WordCount.ExtractWordsFn;
-import org.apache.beam.examples.WordCount.FormatAsTextFn;
+import org.rm3l.beam.WordCount.CountWords;
+import org.rm3l.beam.WordCount.ExtractWordsFn;
+import org.rm3l.beam.WordCount.FormatAsTextFn;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;

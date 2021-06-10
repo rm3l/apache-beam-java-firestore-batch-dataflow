@@ -1,4 +1,4 @@
-package org.apache.beam.examples.firestore;
+package org.rm3l.beam.firestore;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
