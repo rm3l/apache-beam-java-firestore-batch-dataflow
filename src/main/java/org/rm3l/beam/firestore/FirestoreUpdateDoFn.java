@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class FirestoreUpdateDoFn<T> extends DoFn<T, Void> {
 
-  static final int DEFAULT_MAX_BATCH_SIZE = 500;
+  public static final int DEFAULT_MAX_BATCH_SIZE = 500;
 
   private final Logger logger = LoggerFactory.getLogger(FirestoreUpdateDoFn.class);
 
@@ -26,11 +26,6 @@ public class FirestoreUpdateDoFn<T> extends DoFn<T, Void> {
   private final InputToDocumentRefUpdater<T> inputToDocumentRefUpdaterFunction;
 
   private Firestore firestoreDb;
-
-  public FirestoreUpdateDoFn(final String outputFirestoreProjectId,
-      final InputToDocumentRefUpdater<T> inputToDocumentRefUpdaterFunction) {
-    this(outputFirestoreProjectId, DEFAULT_MAX_BATCH_SIZE, inputToDocumentRefUpdaterFunction);
-  }
 
   public FirestoreUpdateDoFn(final String outputFirestoreProjectId, final long maxBatchSize,
       final InputToDocumentRefUpdater<T> inputToDocumentRefUpdaterFunction) {
